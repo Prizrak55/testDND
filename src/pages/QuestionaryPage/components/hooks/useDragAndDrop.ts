@@ -1,5 +1,4 @@
 import {
-  KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
@@ -7,7 +6,7 @@ import {
   type DragOverEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
-import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { arrayMove } from "@dnd-kit/sortable";
 import { useCallback, useMemo, useState } from "react";
 import type { ImageData } from "../ImageGallery";
 
@@ -23,23 +22,12 @@ export const useDragAndDrop = ({
   const [activeId, setActiveId] = useState<string | null>(null);
   const [overId, setOverId] = useState<string | null>(null);
 
-  const sensorConfigs = useMemo(
-    () => ({
-      pointer: {
-        activationConstraint: {
-          distance: 4,
-        },
-      },
-      keyboard: {
-        coordinateGetter: sortableKeyboardCoordinates,
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 4,
       },
     }),
-    [],
-  );
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, sensorConfigs.pointer),
-    useSensor(KeyboardSensor, sensorConfigs.keyboard),
   );
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
